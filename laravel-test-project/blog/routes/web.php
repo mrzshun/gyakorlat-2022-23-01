@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Blogpost;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,17 @@ Route::get('/test-1', function () {
     return response("<h1>Hello world!</h1>");
 });
 
+Route::get('/posts',function() {
+    return view('posts', [
+        'posts' => Blogpost::all()
+    ]);
+});
+
+Route::get('/post/{id?}',function($id = -1) {
+    return view('post', [
+        'post' => Blogpost::find($id)
+    ]);
+});
 
 Route::get('/test-2/{id?}', function ($id = -1) {
     return  view("test-2",[

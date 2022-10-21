@@ -13,16 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('text');
-            $table->string('description')->nullable();
-            $table->boolean('hidden')->default(false);
             $table->timestamps();
-
-            $table->unsignedBigInteger('author')->nullable();          
-            $table->foreign('author')->references('id')->on('users')->onDelete('cascade');
+            $table->string('name');
+            $table->string('bg_color',9);
         });
     }
 
@@ -33,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('categories');
     }
 };

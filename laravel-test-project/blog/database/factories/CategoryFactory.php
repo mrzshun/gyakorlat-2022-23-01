@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
  */
-class PostFactory extends Factory
+class CategoryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,9 +17,8 @@ class PostFactory extends Factory
     public function definition()
     {
         return [
-            'title' => fake()->sentence(rand(3,5)),
-            'text' => fake()->paragraphs(3, true),
-            'description' => fake()->sentence(),
+            'name' => fake()->word(),
+            'bg_color' => fake()->safeHexColor().'ff',
         ];
     }
 }

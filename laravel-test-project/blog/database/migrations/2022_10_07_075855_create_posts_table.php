@@ -21,8 +21,8 @@ return new class extends Migration
             $table->boolean('hidden')->default(false);
             $table->timestamps();
 
-            $table->unsignedBigInteger('author')->nullable();          
-            $table->foreign('author')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('author_id')->nullable();          
+            $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

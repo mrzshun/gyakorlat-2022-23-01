@@ -8,10 +8,23 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <h1>Minden blogpost</h1>
-    @foreach ($posts as $post)
-        <h2><a href="./post/{{$post['id']}}">{{ $post['title'] }}</a></h2>
-        <p>Authur: {{ $post['userName'] }}</p>
-    @endforeach
+    @if(Route::has('login'))
+      <p>Login here</p>
+    @endif
+    
+    <h1>Blogpostok</h1>
+    @forelse ($posts as $post)
+      <h2>{{ $post->title }}</h2>
+      <cite>Authur: {{ $post->author->name }}</cite>
+      <p><strong>Tags:</strong>
+      @foreach($post->categories as $tag)
+        <span style="background-color:{{$tag->bg_color}}">{{ $tag->name }}</span>
+      @endforeach
+     </p>
+     <p><strong>{{ $post->description }}</strong></p>
+     <p>{{ $post->text }}</p>
+    @empty
+      <p>üres</p>
+    @endforelse
   </body>
 </html>

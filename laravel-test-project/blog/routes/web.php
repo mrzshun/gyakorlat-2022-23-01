@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Blogpost;
+use App\Models\Post;
+use App\Models\Category;
+use App\Models\User;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,14 +22,49 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/posts', function () {
+    return view('posts.index');
+});
+
+Route::get('/posts/create', function () {
+    return view('posts.create');
+});
+
+Route::get('/posts/x', function () {
+    return view('posts.show');
+});
+
+Route::get('/posts/x/edit', function () {
+    return view('posts.edit');
+});
+
+// -----------------------------------------
+
+Route::get('/categories/create', function () {
+    return view('categories.create');
+});
+
+Route::get('/categories/x', function () {
+    return view('categories.show');
+});
+
+// -----------------------------------------
+
+Auth::routes();
+
+/*
+Route::get('/', function () {
+    return view('welcome');
+});
+
 
 Route::get('/test-1', function () {
     return response("<h1>Hello world!</h1>");
-});
+})->name('login');
 
 Route::get('/posts',function() {
     return view('posts', [
-        'posts' => Blogpost::all()
+        'posts' => Post::all()
     ]);
 });
 
@@ -47,3 +86,8 @@ Route::get('/test-2/{id?}', function ($id = -1) {
         ]
     ]);
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+*/

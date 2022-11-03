@@ -8,12 +8,20 @@
         {{-- TODO: Link --}}
         <a href="#"><i class="fas fa-long-arrow-alt-left"></i> Back to the homepage</a>
     </div>
-
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @error('name') <li> {{ $message }}</li> @enderror
+            @error('style') <li> {{ $message }}</li> @enderror
+        </ul>
+    </div>
+        
+    @endif
     {{-- TODO: Session flashes --}}
 
     {{-- TODO: action, method --}}
-    <form>
-
+    <form method="POST" action="{{ route('categories.store') }}">
+    @csrf
         <div class="form-group row mb-3">
             <label for="name" class="col-sm-2 col-form-label">Name*</label>
             <div class="col-sm-10">

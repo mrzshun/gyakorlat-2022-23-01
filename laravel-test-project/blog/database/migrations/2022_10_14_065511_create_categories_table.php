@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Category;
 
 return new class extends Migration
 {
@@ -17,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->enum('style',['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark']);
+            $table->enum('style',Category::$styles);
         });
     }
 

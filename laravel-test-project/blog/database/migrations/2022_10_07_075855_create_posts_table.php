@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('text');
             $table->string('description')->nullable();
+            $table->string('cover_image_path')->nullable();
             $table->boolean('hidden')->default(false);
             $table->timestamps();
 

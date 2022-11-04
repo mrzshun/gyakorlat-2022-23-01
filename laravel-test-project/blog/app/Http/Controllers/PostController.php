@@ -6,6 +6,12 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\User;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+
 
 class PostController extends Controller
 {
@@ -30,7 +36,12 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        // if(!Auth::check()){
+        //     return redirect('posts');
+        // }
+        return view('posts.create',[
+            'categories' => Category::all(),
+        ]);
     }
 
     /**
@@ -41,7 +52,39 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate(
+            [
+                'title' => 'required|max:255',
+                'description' => 'required|max:255',
+                'text' => 'required',
+                'categories' => 'nullable|array',
+                'categories.*' => 'numeric|integer|exists:categories,id',
+                'cover_image' => 'file|mimes:jpg,png|max:1024'
+            ],
+            [
+                'required' => 'A mező megadása kötelező',
+                'style.required' => 'Dehát a style az required!'
+            ]
+        );
+        $cover_image_path = '';
+        if($request->hasFile('cover_image')){
+            $file = $request->file('cover_image');
+            $cover_image_path = 'cover_image_'.Str::random(16).'.'.$file->getClientOriginalExtension();
+            Storage::disk('public')->put($cover_image_path,$file->get());
+        }
+        $post = Post::factory()->create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'text' => $validated['text'],
+            'cover_image_path' => $cover_image_path,
+            'author_id' => $request->user()->id,
+        ]);
+        isset($validated['categories']) ? 
+        $post->categories()->sync($validated['categories']) : "";
+        Session::flash('post_created',$validated['title']);
+        // Session::flash('name',$validated['name']);
+        // Session::flash('style',$validated['style']);
+        return redirect()->route('posts.create');
     }
 
     /**

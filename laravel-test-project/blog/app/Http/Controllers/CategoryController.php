@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Session;
 
 class CategoryController extends Controller
 {
@@ -35,10 +37,24 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'style' => 'required',
-            'name' => 'required',            
-        ]);
+        $validated = $request->validate(
+            [
+                'style' => [
+                    'required',
+                    Rule::in(Category::$styles),
+                ],
+                'name' => 'required',
+            ],
+            [
+                'required' => 'A mező megadása kötelező',
+                'style.required' => 'Dehát a style az required!'
+            ]
+        );
+        Category::factory()->create($validated);
+        Session::flash('category_created');
+        Session::flash('name',$validated['name']);
+        Session::flash('style',$validated['style']);
+        return redirect()->route('categories.create');
     }
 
     /**

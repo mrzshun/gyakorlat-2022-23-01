@@ -20,7 +20,7 @@
         <h2>Kérlek jelentkezz be a funkció használatához</h2>
     @endguest
 
-    @auth    
+    {{-- @auth --}}
         {{-- TODO: action, method, enctype --}}
         <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
             @csrf
@@ -116,7 +116,7 @@
                 <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Store</button>
             </div>
         </form>
-    @endauth
+    {{-- @endauth --}}
 
 </div>
 @endsection

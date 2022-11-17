@@ -1,39 +1,45 @@
 @extends('layouts.app')
 {{-- TODO: Post title --}}
-@section('title', 'View post: ')
+@section('title', 'View post: '. $post->title)
 
 @section('content')
 <div class="container">
 
     {{-- TODO: Session flashes --}}
 
+    @if (Session::has('post_created'))
+        <div class="alert alert-success">
+            Sikeresen létrehoztad a postot az alábbi címmel: {{ session()->get('post_created')}}
+        </div>        
+    @endif
+
     <div class="row justify-content-between">
         <div class="col-12 col-md-8">
             {{-- TODO: Title --}}
-            <h1>Post title</h1>
+            <h1> {{ $post->title }} </h1>
 
             <p class="small text-secondary mb-0">
                 <i class="fas fa-user"></i>
                 {{-- TODO: Author --}}
-                <span>By Author</span>
+                <span>By {{ $post->author ? $post->author->name : "unknown" }}</span>
             </p>
             <p class="small text-secondary mb-0">
                 <i class="far fa-calendar-alt"></i>
                 {{-- TODO: Date --}}
-                <span>01/01/2022</span>
+                <span>{{ $post->created_at }}</span>
             </p>
 
             <div class="mb-2">
                 {{-- TODO: Read post categories from DB --}}
-                @foreach (['primary', 'secondary','danger', 'warning', 'info', 'dark'] as $category)
-                    <a href="#" class="text-decoration-none">
-                        <span class="badge bg-{{ $category }}">{{ $category }}</span>
+                @foreach ($post->categories as $category)
+                    <a href="{{ route('categories.show',$category) }}" class="text-decoration-none">
+                        <span class="badge bg-{{ $category->style }}">{{ $category->name }}</span>
                     </a>
-                @endforeach
+                    @endforeach
             </div>
 
             {{-- TODO: Link --}}
-            <a href="#"><i class="fas fa-long-arrow-alt-left"></i> Back to the homepage</a>
+            <a href="{{ route('posts.index') }}"><i class="fas fa-long-arrow-alt-left"></i>Back to the homepage</a>
 
         </div>
 
@@ -41,11 +47,15 @@
             <div class="float-lg-end">
 
                 {{-- TODO: Links, policy --}}
-                <a role="button" class="btn btn-sm btn-primary" href="#"><i class="far fa-edit"></i> Edit post</a>
+                @can('update', $post)
+                    <a role="button" class="btn btn-sm btn-primary" href="{{ route('posts.edit',$post) }}"><i class="far fa-edit"></i> Edit post</a>
+                @endcan
 
-                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete-confirm-modal"><i class="far fa-trash-alt">
-                    <span></i> Delete post</span>
-                </button>
+                @can('delete', $post)
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete-confirm-modal"><i class="far fa-trash-alt">
+                        <span></i> Delete post</span>
+                    </button>
+                @endcan
 
             </div>
         </div>
@@ -74,7 +84,9 @@
                     </button>
 
                     {{-- TODO: Route, directives --}}
-                    <form id="delete-post-form" action="#" method="POST" class="d-none">
+                    <form id="delete-post-form" action="{{ route('posts.destroy',$post) }}" method="POST" class="d-none">
+                        @method('DELETE')
+                        @csrf
 
                     </form>
                 </div>
@@ -85,14 +97,15 @@
     <img
         id="cover_preview_image"
         {{-- TODO: Cover --}}
-        src="{{ asset('images/default_post_cover.jpg') }}"
+        src="{{ asset( isset($post->cover_image_path) ? 'storage/'.$post->cover_image_path : 'images/default_post_cover.jpg') }}"
         alt="Cover preview"
         class="my-3"
+        width="400px"
     >
 
     <div class="mt-3">
         {{-- TODO: Post paragraphs --}}
-         Lorem ipsum
+         {{ $post->text }}
     </div>
 </div>
 @endsection

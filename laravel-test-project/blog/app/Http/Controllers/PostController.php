@@ -134,7 +134,44 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-    }
+        $this->authorize('update',$post);
+        $validated = $request->validate(
+            [
+                'title' => 'required|max:255',
+                'description' => 'required|max:255',
+                'text' => 'required',
+                'categories' => 'nullable|array',
+                'categories.*' => 'numeric|integer|exists:categories,id',
+                'cover_image' => 'file|mimes:jpg,png|max:1024',
+                'remove_cover_path' => 'nullable|boolean'
+            ],
+            [
+                'required' => 'A mező megadása kötelező',
+                'style.required' => 'Dehát a style az required!'
+            ]
+        );
+        $cover_image_path = $post->cover_image_path;
+        if(isset($validated['remove_cover_path'])){
+            $cover_image_path = "";
+        }
+        elseif($request->hasFile('cover_image')){
+            $file = $request->file('cover_image');
+            $cover_image_path = 'cover_image_'.Str::random(16).'.'.$file->getClientOriginalExtension();
+            Storage::disk('public')->put($cover_image_path,$file->get());
+            Storage::disk('public')->delete($post->cover_image_path);
+        }
+        $post->title = $validated['title'];
+        $post->description = $validated['description'];
+        $post->text = $validated['text'];
+        $post->cover_image_path = $cover_image_path;
+        $post->save();
+
+        isset($validated['categories']) ? 
+        $post->categories()->sync($validated['categories']) : "";
+        Session::flash('post_edited',$validated['title']);
+        // Session::flash('name',$validated['name']);
+        // Session::flash('style',$validated['style']);
+        return redirect()->route('posts.show',$post);    }
 
     /**
      * Remove the specified resource from storage.

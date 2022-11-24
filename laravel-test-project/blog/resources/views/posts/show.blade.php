@@ -13,6 +13,12 @@
         </div>        
     @endif
 
+    @if (Session::has('post_edited'))
+        <div class="alert alert-success">
+            Sikeresen szerkesztetted a postot.
+        </div>        
+    @endif
+
     <div class="row justify-content-between">
         <div class="col-12 col-md-8">
             {{-- TODO: Title --}}

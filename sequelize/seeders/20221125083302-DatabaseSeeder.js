@@ -25,7 +25,7 @@ module.exports = {
         });
         for (let i = 0; i<postNum; i++){
             await Post.create({
-                name: faker.lorem.sentence(),
+                title: faker.lorem.sentence(),
                 description: faker.lorem.sentences(3),
                 text: faker.lorem.paragraphs(5),
             });

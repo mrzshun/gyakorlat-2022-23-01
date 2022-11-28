@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "db": "npx rimraf database/database.sqlite && npx sequelize db:migrate && npx sequelize db:seed:all"
+  },
   "development": {
     "dialect": "sqlite",
     "storage": "database/database.sqlite"

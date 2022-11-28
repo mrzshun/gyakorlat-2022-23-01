@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Post.belongsTo(models.User);
+      this.belongsToMany(models.Category, {
+        through: "CategoryPost",
+      });
+
     }
   }
   Post.init({
